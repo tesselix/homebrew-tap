@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2026 Sagi Forbes Nagar
+# SPDX-License-Identifier: BSD-2-Clause
+#
+# Every cask through brew style and brew audit: on pull requests, and on
+# pushes to main (the release bot's commits from gtty's release workflow).
+name: Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  casks:
+    name: brew style + audit
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # This checkout as the tap tesselix/tap.
+      - name: Tap this checkout
+        run: |
+          tap="$(brew --repository)/Library/Taps/tesselix/homebrew-tap"
+          rm -rf "$tap"
+          mkdir -p "$(dirname "$tap")"
+          ln -s "$GITHUB_WORKSPACE" "$tap"
+
+      - name: brew style + audit, each cask
+        run: |
+          for f in Casks/*.rb; do
+            cask="tesselix/tap/$(basename "$f" .rb)"
+            brew style --cask "$cask"
+            brew audit --cask --online --strict "$cask"
+          done
