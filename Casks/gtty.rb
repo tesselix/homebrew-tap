@@ -4,8 +4,8 @@
 # Written by gtty's release workflow from packaging/homebrew/gtty.rb.in in
 # tesselix/gtty; change it there, not here.
 cask "gtty" do
-  version "1.16.1"
-  sha256 "0cfa5bc99b9978dd768c560128840ece828cad856b433a947a4d31f7ed898a44"
+  version "1.16.2"
+  sha256 "23cb7ed23b56104722b21efe6e318e5b1bd718071d2894996ab3434434496bc3"
 
   url "https://github.com/tesselix/gtty/releases/download/v#{version}/gtty-#{version}-macos.dmg"
   name "gtty"
