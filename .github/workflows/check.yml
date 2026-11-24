@@ -33,6 +33,11 @@ jobs:
           mkdir -p "$(dirname "$tap")"
           ln -s "$GITHUB_WORKSPACE" "$tap"
 
+      # Homebrew 7 loads a non-official tap's casks only once trusted
+      # (users: brew install --cask tesselix/tap/gtty trusts it by itself).
+      - name: Trust this tap
+        run: brew trust --tap tesselix/tap
+
       - name: brew style + audit, each cask
         run: |
           for f in Casks/*.rb; do
